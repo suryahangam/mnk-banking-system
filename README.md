@@ -329,9 +329,9 @@ ___
     **update method:**
     *(This is for update account functionality)*
 
-        Handles the updating of existing account data by iterating over the provided fields and updating the corresponding account attributes. Finally, it saves the instance.
+     Handles the updating of existing account data by iterating over the provided fields and updating the corresponding account attributes. Finally, it saves the instance.
 
-        Together, the view and serializer work to handle the creation of new accounts, with the necessary validation and data handling. The AccountCreateView ensures that only admins can create accounts, while AccountSerializer ensures the data being provided is valid, such as correct postal codes and non-negative interest rates.
+     Together, the view and serializer work to handle the creation of new accounts, with the necessary validation and data handling. The AccountCreateView ensures that only admins can create accounts, while AccountSerializer ensures the data being provided is valid, such as correct postal codes and non-negative interest rates.
 
     ___
 
@@ -514,9 +514,9 @@ ___
 
     **How It Works:**
 
-        - When an authenticated user sends a GET request to retrieve an account’s details, the get_object() method (inherited from RetrieveAPIView) fetches the specific account using the primary key passed in the URL.
+   - When an authenticated user sends a GET request to retrieve an account’s details, the get_object() method (inherited from RetrieveAPIView) fetches the specific account using the primary key passed in the URL.
 
-        - The AccountSerializer processes this account and returns the details, including related transactions, in the response.
+   - The AccountSerializer processes this account and returns the details, including related transactions, in the response.
 ___
 
 3. **Banking Operation**
@@ -762,7 +762,7 @@ ___
 
     **Use Cases**
 
-        Transaction Preparation: Users planning to transfer funds in different currencies can utilize this endpoint to understand the conversion implications on their funds before proceeding with a transaction.
+   Transaction Preparation: Users planning to transfer funds in different currencies can utilize this endpoint to understand the conversion implications on their funds before proceeding with a transaction.
 
 ## contributing
 ## license
