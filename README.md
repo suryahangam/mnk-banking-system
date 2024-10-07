@@ -1,4 +1,4 @@
-# Banking System Project
+# MNK Re Limited - Banking System API
 
 ## Table of Contents
 - [Project Overview](#project-overview)
@@ -80,12 +80,12 @@ Follow these steps to install and run the project:
     Create a database and user in PostgreSQL.
     Example:
 
-    - Connect to PostgreSQL database
+    - **Connect to PostgreSQL database**
     ```
     psql -d postgres -U your-username
     ```   
 
-    - Once connected, create database and user
+    - **Once connected, create database and user**
     ```
     CREATE DATABASE database_name;
     CREATE USER username WITH PASSWORD 'yourpassword';
@@ -93,7 +93,7 @@ Follow these steps to install and run the project:
     ```
 
 5. **Create .env File on root directory**
-    (Will be provided)
+    *(Will be provided)*
     Add following environment variables on .env:
     ```    
     SECRET_KEY='project-security-key'
@@ -155,11 +155,14 @@ Follow these steps to install and run the project:
 ## Code Explanation
 *Note: API details will be provided on postman collection*
 
+
 1. **Authentication system**
     
     - **User Registration:**
-        [Registration View](https://github.com/suryahangam/mnk-banking-system/blob/main/authentication/views.py#L23)
-        [Registration Serializer](https://github.com/suryahangam/mnk-banking-system/blob/main/authentication/serializers.py#L5)
+
+    [Registration View](https://github.com/suryahangam/mnk-banking-system/blob/main/authentication/views.py#L23)
+    [Registration Serializer](https://github.com/suryahangam/mnk-banking-system/blob/main/authentication/serializers.py#L5)
+
 
     ```
     class UserRegistrationView(CreateAPIView):
@@ -174,40 +177,43 @@ Follow these steps to install and run the project:
     api/auth/register/
     ```
 
-    **UserRegistrationView**
+    1. **UserRegistrationView**
 
-    **Purpose:** 
-    This view manages user registration through a POST request. It enables new users to create accounts in your application.
+        **Purpose:** 
+        This view manages user registration through a POST request. It enables new users to create accounts in your application.
 
-    **Inheritance:** 
-    Inherits from CreateAPIView, which provides built-in methods for handling creation requests.
+        **Inheritance:** 
+        Inherits from CreateAPIView, which provides built-in methods for handling creation requests.
 
-    **Serializer:** Uses UserRegistrationSerializer to validate input data and create user instances.
+        **Serializer:** Uses UserRegistrationSerializer to validate input data and create user instances.
 
-    **POST Method:** The post() method handles incoming registration requests, validates the data, and creates a new user if the        validation succeeds. It returns a response with the user data upon successful registration.
+        **POST Method:** The post() method handles incoming registration requests, validates the data, and creates a new user if the        validation succeeds. It returns a response with the user data upon successful registration.
 
 
-    **UserRegistrationSerializer**
+    2. **UserRegistrationSerializer**
 
-    **Purpose:** 
-    This serializer validates the data submitted during user registration and manages the creation of user instances.
+        **Purpose:** 
+        This serializer validates the data submitted during user registration and manages the creation of user instances.
 
-    **Fields:**
-        - password and confirm_password: Used to ensure the user sets a valid password, with confirmation for accuracy.
-        - email: The unique email address for the user.
-        - mobile_number: Stores the user's mobile number(Optional).
+        **Fields:**
+            - password and confirm_password: Used to ensure the user sets a valid password, with confirmation for accuracy.
+            - email: The unique email address for the user.
+            - mobile_number: Stores the user's mobile number(Optional).
 
-    **Validation Methods:**
-    **create():** Handles user creation logic, including password hashing.
-    **validate():** Ensures that the password and confirmation match.
-    **validate_email():** Checks for the uniqueness of the email address in the database, raising an error if it already exists.
+        **Validation Methods:**
+        **create():** Handles user creation logic, including password hashing.
+        **validate():** Ensures that the password and confirmation match.
+        **validate_email():** Checks for the uniqueness of the email address in the database, raising an error if it already exists.
 
-    These components collectively enable a secure and validated user registration process, ensuring that user data is correctly handled and stored in your Django application.
+        These components collectively enable a secure and validated user registration process, ensuring that user data is correctly handled and stored in your Django application.
 
+    ___
 
     - **Login**    
-        [Login API](https://github.com/suryahangam/mnk-banking-system/blob/main/authentication/views.py#L62)
-        [Token Verification](https://github.com/suryahangam/mnk-banking-system/blob/main/authentication/views.py#L157)
+
+    [Login API](https://github.com/suryahangam/mnk-banking-system/blob/main/authentication/views.py#L62)
+    [Token Verification](https://github.com/suryahangam/mnk-banking-system/blob/main/authentication/views.py#L157)
+
 
     ```
     class CustomTokenObtainPairView(TokenObtainPairView):
@@ -224,29 +230,29 @@ Follow these steps to install and run the project:
     ```
 
     **Custom Token Obtain Pair View (JWT Integration with 2FA)**
-    This view extends the standard token generation functionality provided by Simple JWT to incorporate an additional layer of security with Two-Factor Authentication (2FA).
+    - This view extends the standard token generation functionality provided by Simple JWT to incorporate an additional layer of security with Two-Factor Authentication (2FA).
 
-    - **JWT Token Generation:** 
-    Using Simple JWT, this view allows users to log in by providing their email and password to obtain an access token and a refresh token.
+        - **JWT Token Generation:** 
+        Using Simple JWT, this view allows users to log in by providing their email and password to obtain an access token and a refresh token.
 
-    -**Two-Factor Authentication (2FA):** 
-    If the user has 2FA enabled, the system generates a One-Time Password (OTP) via the pyotp library. The OTP is sent to the user through their preferred method (email or SMS).
+        - **Two-Factor Authentication (2FA):** 
+        If the user has 2FA enabled, the system generates a One-Time Password (OTP) via the pyotp library. The OTP is sent to the user through their preferred method (email or SMS).
 
-    -**Modified Token Response:** 
-    When 2FA is required, the response omits the token pair (access and refresh tokens) and instead informs the user that they need to verify their OTP. This adds an extra security step.
+        - **Modified Token Response:** 
+        When 2FA is required, the response omits the token pair (access and refresh tokens) and instead informs the user that they need to verify their OTP. This adds an extra security step.
 
 
     **Two-Factor Verify View (OTP Verification)**
-    This view allows users to verify the One-Time Password (OTP) they received via their selected 2FA method (email or SMS). After successful verification, a new JWT access token and refresh token are provided, granting full access to protected resources.
+    - This view allows users to verify the One-Time Password (OTP) they received via their selected 2FA method (email or SMS). After successful verification, a new JWT access token and refresh token are provided, granting full access to protected resources.
 
-    -**OTP Verification:** 
-    Users submit their user ID and the OTP they received. The system verifies the OTP using the same time-based OTP mechanism (TOTP) with a 5-minute validity window.
+        - **OTP Verification:** 
+            Users submit their user ID and the OTP they received. The system verifies the OTP using the same time-based OTP mechanism (TOTP) with a 5-minute validity window.
 
-    -**Token Issuance:** 
-    If the OTP is correct, the user is provided with a valid JWT access token and refresh token.
+        - **Token Issuance:** 
+            If the OTP is correct, the user is provided with a valid JWT access token and refresh token.
 
-    -**Error Handling:** 
-    If the OTP is incorrect, the system responds with an error message, indicating that the verification failed.
+        - **Error Handling:** 
+            If the OTP is incorrect, the system responds with an error message, indicating that the verification failed.
 
     **Key Features:**
     - **JWT (Simple JWT):** Provides stateless authentication with token generation for user sessions.
@@ -254,11 +260,14 @@ Follow these steps to install and run the project:
     - **Time-based OTP:** Using the pyotp library, the OTP is valid for a short window (5 minutes).
     - **Token Refresh:** After successful OTP verification, the user is issued a new JWT refresh token for maintaining their session.
 
+___
+
 2. **Account Management**
 
     - **Account Creation (Single + Bulk)**
-        [Account Create View](https://github.com/suryahangam/mnk-banking-system/blob/main/accounts/views.py#L14)
-        [Account Create Serializer](https://github.com/suryahangam/mnk-banking-system/blob/main/accounts/serializers.py#L10)
+
+    [Account Create View](https://github.com/suryahangam/mnk-banking-system/blob/main/accounts/views.py#L14)
+    [Account Create Serializer](https://github.com/suryahangam/mnk-banking-system/blob/main/accounts/serializers.py#L10)
 
     ```
     class AccountCreateView(generics.CreateAPIView):
@@ -289,12 +298,13 @@ Follow these steps to install and run the project:
 
     - **post method:**
 
-    - Handles POST requests for creating accounts.
-    - Supports both single and bulk account creation based on whether the incoming request data is a single object in a list or multiple objects.
-    - Once validated through the serializer, the method saves the account(s) and returns a success message along with the created   account IDs.
+        - Handles POST requests for creating accounts.
+        - Supports both single and bulk account creation based on whether the incoming request data is a single object in a list or multiple objects.
+        - Once validated through the serializer, the method saves the account(s) and returns a success message along with the created   account IDs.
 
 
     **AccountSerializer:**
+
     The serializer is responsible for validating and serializing data related to the account model. It ensures that the data conforms to the necessary constraints before being saved in the database.
 
     - **user_details:** This is a nested serializer (UserListSerializer) that is used to include user information when retrieving account details.
@@ -314,19 +324,22 @@ Follow these steps to install and run the project:
         - validate_interest_rate: Ensures that the interest rate is not negative.
         
     - **create method:**
-
-    Supports both single account creation and bulk creation. If multiple accounts are provided, it uses bulk_create() for efficient database insertion.
+        Supports both single account creation and bulk creation. If multiple accounts are provided, it uses bulk_create() for efficient database insertion.
 
     **update method:**
     *(This is for update account functionality)*
 
-    Handles the updating of existing account data by iterating over the provided fields and updating the corresponding account attributes. Finally, it saves the instance.
+        Handles the updating of existing account data by iterating over the provided fields and updating the corresponding account attributes. Finally, it saves the instance.
 
-    Together, the view and serializer work to handle the creation of new accounts, with the necessary validation and data handling. The AccountCreateView ensures that only admins can create accounts, while AccountSerializer ensures the data being provided is valid, such as correct postal codes and non-negative interest rates.
+        Together, the view and serializer work to handle the creation of new accounts, with the necessary validation and data handling. The AccountCreateView ensures that only admins can create accounts, while AccountSerializer ensures the data being provided is valid, such as correct postal codes and non-negative interest rates.
+
+    ___
 
     - **Account Update**
-        [Account Update View](https://github.com/suryahangam/mnk-banking-system/blob/main/accounts/views.py#L37)
-        *both create and update uses same serializer*
+
+    [Account Update View](https://github.com/suryahangam/mnk-banking-system/blob/main/accounts/views.py#L37)
+
+    *both create and update uses same serializer*
 
     ```
     class AccountUpdateView(generics.UpdateAPIView):
@@ -356,16 +369,12 @@ Follow these steps to install and run the project:
         The view uses two permission classes:
         - IsAuthenticated: Ensures that only logged-in users can access this view.
         - IsAccountOwnerOrAdmin: A custom permission class that allows either the account owner or admin users to update the account.
-        
-    2. **queryset:**
 
-        The queryset is set to ```Account.objects.all()```, meaning it will retrieve all account objects from the database. This is used internally for retrieving the objects based on conditions.
-
-    3. **serializer_class:**
+    2. **serializer_class:**
 
         The view uses AccountSerializer to handle the serialization of data and validation when updating account information.
         
-    4. **get_object method:**
+    3. **get_object method:**
 
         - This method customizes how the specific account object is retrieved based on the authenticated user's role:
 
@@ -374,7 +383,7 @@ Follow these steps to install and run the project:
 
         - The method uses Django's get_object_or_404 helper to retrieve the account object. If the account doesn't exist, it will return a 404 Not Found response.
 
-    5. **put method:**
+    4. **put method:**
 
         put(request, *args, **kwargs) is responsible for handling HTTP PUT requests to update the account data. This is where the actual update happens:
 
@@ -384,8 +393,11 @@ Follow these steps to install and run the project:
         - Save changes: Once validated, the serializer.save() method updates the account object in the database.
         - Response: A success message is returned with a 200 OK status, along with the account_id of the updated account.
 
+    ___
     - **Account Listing (Search & Filtering)**
-        [Account List View](https://github.com/suryahangam/mnk-banking-system/blob/main/accounts/views.py#L77)
+        
+    [Account List View](https://github.com/suryahangam/mnk-banking-system/blob/main/accounts/views.py#L77)
+
 
     ```
     class AccountListView(generics.ListAPIView):
@@ -401,26 +413,26 @@ Follow these steps to install and run the project:
 
     1. **AccountListView (Account Listing View):**
 
-    The AccountListView is an API view designed to list all account records. It includes advanced features like pagination, search, and filtering to allow users to view and filter account data efficiently.
+        The AccountListView is an API view designed to list all account records. It includes advanced features like pagination, search, and filtering to allow users to view and filter account data efficiently.
 
-    - Permissions:
-        Users must be authenticated (IsAuthenticated) and either the account owner or an admin (IsAccountOwnerOrAdmin) to access the view.
+        - Permissions:
+            Users must be authenticated (IsAuthenticated) and either the account owner or an admin (IsAccountOwnerOrAdmin) to access the view.
 
-    - Pagination:
-        The results are paginated using ListPagination to handle large datasets, allowing users to retrieve records in manageable chunks.
+        - Pagination:
+            The results are paginated using ListPagination to handle large datasets, allowing users to retrieve records in manageable chunks.
 
-    - Filtering:
-        The view supports filtering based on account attributes like account_type, user, and balance using DjangoFilterBackend and a custom AccountFilter.
+        - Filtering:
+            The view supports filtering based on account attributes like account_type, user, and balance using DjangoFilterBackend and a custom AccountFilter.
 
     2. **AccountSerializer (Serializer for Account Data):**
 
-    The AccountSerializer is responsible for converting Account model instances to a format suitable for API responses (serialization) and for validating incoming data when creating or updating accounts.
+        The AccountSerializer is responsible for converting Account model instances to a format suitable for API responses (serialization) and for validating incoming data when creating or updating accounts.
 
     - Fields:
         It serializes important fields related to user and account details, including:
-            - Personal information (first_name, last_name, etc.)
-            - Account-specific details (balance, currency, account_number, etc.)
-            - Related transactions (using the get_transactions method).
+        - Personal information (first_name, last_name, etc.)
+        - Account-specific details (balance, currency, account_number, etc.)
+        - Related transactions (using the get_transactions method).
 
     - Methods:
         - get_transactions(obj): Retrieves a list of all transactions (sent and received) associated with the account.
@@ -434,17 +446,20 @@ Follow these steps to install and run the project:
         - The serializer supports bulk account creation when a list of data is provided.
         - Read-only fields include balance, currency, date_opened, account_number, and transactions.
 
+
     3. **ListPagination (Custom Pagination Class):**
 
-    The ListPagination class is a custom paginator for handling API responses that list multiple items (e.g., accounts). It controls the number of items per page and allows users to customize the page size using query parameters.
+        The ListPagination class is a custom paginator for handling API responses that list multiple items (e.g., accounts). It controls the number of items per page and allows users to customize the page size using query parameters.
 
     - Attributes:
         - page_size: Default number of items per page is 10.
         - page_size_query_param: Allows users to set a custom page size using a query parameter (e.g., page_size=20).
         - max_page_size: Limits the maximum number of items per page to 100.
         
+
     4. **AccountFilter (Custom Filter for Account Queries):**
         The AccountFilter class defines several filters that allow users to filter account records based on various fields when making API requests. This enhances the querying capabilities of the API.
+
 
     - Filter Fields:
         - account_type: Filters by account type (e.g., Savings, Current).
@@ -453,10 +468,12 @@ Follow these steps to install and run the project:
         - balance_min: Filters accounts with a balance greater than or equal to a specified value.
         - balance_max: Filters accounts with a balance less than or equal to a specified value.
 
-
+    ___
     - **Account Detail with related transaction history**
-        [Account Detail View](https://github.com/suryahangam/mnk-banking-system/blob/main/accounts/views.py#L89)
-        *both create and update uses same serializer*
+        
+    [Account Detail View](https://github.com/suryahangam/mnk-banking-system/blob/main/accounts/views.py#L89)
+        
+    *both create and update uses same serializer*
 
     ```
     class AccountDetailView(generics.RetrieveAPIView):
@@ -484,23 +501,24 @@ Follow these steps to install and run the project:
   
     2. **Serializer:**
 
-    - The view utilizes the AccountSerializer to transform the account data into JSON format.
+        - The view utilizes the AccountSerializer to transform the account data into JSON format.
 
-    - Since this serializer includes a transactions field (using the get_transactions method), it also retrieves transaction histories related to the account, both sent and received transactions.
+        - Since this serializer includes a transactions field (using the get_transactions method), it also retrieves transaction histories related to the account, both sent and received transactions.
 
 
     3. **get_serializer_context Method:**
 
-    - This method ensures that the request context is passed into the serializer.
+        - This method ensures that the request context is passed into the serializer.
 
-    - By updating the context with {"request": self.request}, it ensures that when serializing the account data (including related transactions), the request object is available, allowing for customization in serialization (like dynamic URL generation or permissions checks).
+        - By updating the context with {"request": self.request}, it ensures that when serializing the account data (including related transactions), the request object is available, allowing for customization in serialization (like dynamic URL generation or permissions checks).
 
     **How It Works:**
 
-    - When an authenticated user sends a GET request to retrieve an account’s details, the get_object() method (inherited from RetrieveAPIView) fetches the specific account using the primary key passed in the URL.
+        - When an authenticated user sends a GET request to retrieve an account’s details, the get_object() method (inherited from RetrieveAPIView) fetches the specific account using the primary key passed in the URL.
 
-    - The AccountSerializer processes this account and returns the details, including related transactions, in the response.
-    
+        - The AccountSerializer processes this account and returns the details, including related transactions, in the response.
+___
+
 3. **Banking Operation**
 
     - **ThirdParty services used**
@@ -560,41 +578,41 @@ Follow these steps to install and run the project:
 
     1. **TransactionCreateView:**
 
-    - **Purpose:** 
-    This class handles the creation of new transactions from one account to anoter. It is responsible for creating transaction 
-    records and also updates the balance of respective user accounts.
+        - **Purpose:** 
+        This class handles the creation of new transactions from one account to anoter. It is responsible for creating transaction 
+        records and also updates the balance of respective user accounts.
 
-    - **Attributes:**
-        - queryset: Retrieves all transaction objects from the database.
-        - serializer_class: Utilizes the TransactionCreateSerializer to validate incoming data.
-        - permission_classes: Only allows authenticated users to access this view.
+        - **Attributes:**
+            - queryset: Retrieves all transaction objects from the database.
+            - serializer_class: Utilizes the TransactionCreateSerializer to validate incoming data.
+            - permission_classes: Only allows authenticated users to access this view.
 
-    - **Method:**
-        **create(request, *args, kwargs):
-        - Receives the transaction data, validates it, and creates a transaction.
-        - Sets the transaction status to 'COMPLETED' immediately after creation due to no external processing delays.
-        - Returns a JSON response indicating the status of the transaction.
+        - **Method:**
+            **create(request, *args, kwargs):
+            - Receives the transaction data, validates it, and creates a transaction.
+            - Sets the transaction status to 'COMPLETED' immediately after creation due to no external processing delays.
+            - Returns a JSON response indicating the status of the transaction.
 
     2. **TransactionCreateSerializer**
 
-    Responsible for validating the transaction data and creating transaction instances.
+        Responsible for validating the transaction data and creating transaction instances.
 
-    - **Fields:**
+        - **Fields:**
 
-        - receiver_account_number: (write-only) the account number of the recipient.
-        - amount: the amount to be transferred.
-        - description: a brief description of the transaction.
-        - to_currency: specifies the currency in which the recipient expects to receive funds.
-    
-    - **Methods:**
-        - validate_to_currency: Ensures the provided currency is one of the supported options (USD, EUR, GBP).
-        - validate_amount: Checks that the transfer amount is greater than zero.
-        - validate: Validates overall transaction conditions including:
-            - Sender and receiver accounts cannot be the same.
-            - The sender must have sufficient funds.
-            - Currency compatibility between sender and receiver accounts.
+            - receiver_account_number: (write-only) the account number of the recipient.
+            - amount: the amount to be transferred.
+            - description: a brief description of the transaction.
+            - to_currency: specifies the currency in which the recipient expects to receive funds.
+        
+        - **Methods:**
+            - validate_to_currency: Ensures the provided currency is one of the supported options (USD, EUR, GBP).
+            - validate_amount: Checks that the transfer amount is greater than zero.
+            - validate: Validates overall transaction conditions including:
+                - Sender and receiver accounts cannot be the same.
+                - The sender must have sufficient funds.
+                - Currency compatibility between sender and receiver accounts.
 
-        - create: Handles the creation of the transaction, including any necessary currency conversion.
+            - create: Handles the creation of the transaction, including any necessary currency conversion.
 
     3. **Currency Conversion**
 
@@ -646,37 +664,40 @@ Follow these steps to install and run the project:
 
     1. **ListTransactionView**
 
-    - Purpose: This view class handles the retrieval and presentation of transaction data to the user.
+        - Purpose: This view class handles the retrieval and presentation of transaction data to the user.
 
-    - Attributes:
+        - Attributes:
 
-        - queryset: Retrieves all transaction objects from the database.
-        - serializer_class: Specifies the TransactionSerializer to serialize transaction data into JSON format.
-        - pagination_class: Utilizes ListPagination to paginate the transaction list, ensuring manageable chunks of data are sent to the client.
-        - filterset_class: Uses TransactionFilter to apply filters based on user input.
-        - filter_backends: Combines Django Filter and SearchFilter to allow filtering and searching of transactions.
-        - permission_classes: Ensures that only authenticated users or users with specific permissions can access the view.
+            - queryset: Retrieves all transaction objects from the database.
+            - serializer_class: Specifies the TransactionSerializer to serialize transaction data into JSON format.
+            - pagination_class: Utilizes ListPagination to paginate the transaction list, ensuring manageable chunks of data are sent to the client.
+            - filterset_class: Uses TransactionFilter to apply filters based on user input.
+            - filter_backends: Combines Django Filter and SearchFilter to allow filtering and searching of transactions.
+            - permission_classes: Ensures that only authenticated users or users with specific permissions can access the view.
+
 
     2. **TransactionSerializer**
 
-    - Purpose: This serializer converts Transaction model instances to and from JSON format. It defines the fields to be included in the serialized output and provides methods for custom serialization.
+        - Purpose: This serializer converts Transaction model instances to and from JSON format. It defines the fields to be included in the serialized output and provides methods for custom serialization.
 
-    - Attributes:
+        - Attributes:
 
-        - id: The unique identifier for the transaction.
-        - sender_email: The email address of the sender, retrieved from the sender's user account.
-        - receiver_email: The email address of the receiver, retrieved from the receiver's user account.
-        - amount: The amount involved in the transaction.
-        - timestamp: The date and time when the transaction occurred.
-        - status: The current status of the transaction (e.g., completed, pending).
-        - description: A brief description of the transaction.
-        - transaction_type: The type of transaction based on the user making the request.
+            - id: The unique identifier for the transaction.
+            - sender_email: The email address of the sender, retrieved from the sender's user account.
+            - receiver_email: The email address of the receiver, retrieved from the receiver's user account.
+            - amount: The amount involved in the transaction.
+            - timestamp: The date and time when the transaction occurred.
+            - status: The current status of the transaction (e.g., completed, pending).
+            - description: A brief description of the transaction.
+            - transaction_type: The type of transaction based on the user making the request.
 
-    - Methods:
-        - get_transaction_type: Returns the type of transaction based on the current authenticated user.
+        - Methods:
+            - get_transaction_type: Returns the type of transaction based on the current authenticated user.
 
     - **Transaction Detail View**
+
     [Detail Transaction View](https://github.com/suryahangam/mnk-banking-system/blob/main/transactions/views.py#L76)
+
 
     ```
     class DetailTransactionView(generics.RetrieveAPIView):
@@ -696,13 +717,16 @@ Follow these steps to install and run the project:
     The DetailTransactionView is an API endpoint for retrieving detailed information about a specific transaction. It extends Django REST Framework's RetrieveAPIView to fetch a single transaction instance from the database.
 
     **Key Features**
-        - Transaction Retrieval: The view fetches transactions using Transaction.objects.all(), allowing users to access their transaction details.
+    
+    - Transaction Retrieval: The view fetches transactions using Transaction.objects.all(), allowing users to access their transaction details.
 
-        - Serializer Usage: It uses TransactionSerializer to convert transaction data into a user-friendly JSON format.
+    - Serializer Usage: It uses TransactionSerializer to convert transaction data into a user-friendly JSON format.
 
-        - Permission Control: Access is restricted to authenticated users, specifically the transaction owner or an admin, ensuring data privacy and security.
+    - Permission Control: Access is restricted to authenticated users, specifically the transaction owner or an admin, ensuring data    privacy and security.
+
 
     - **Currency conversion API endpoint**
+
     [Currency convert Endpoint](https://github.com/suryahangam/mnk-banking-system/blob/main/transactions/views.py#L85)
 
     ```
@@ -715,6 +739,7 @@ Follow these steps to install and run the project:
     This view allows authenticated users to input an amount and a target currency
     for conversion. The API calculates the converted amount based on real-time 
     exchange rates and adds a conversion spread, displaying the total converted amount.
+
 
     **Key Features**
 
@@ -737,7 +762,7 @@ Follow these steps to install and run the project:
 
     **Use Cases**
 
-    Transaction Preparation: Users planning to transfer funds in different currencies can utilize this endpoint to understand the conversion implications on their funds before proceeding with a transaction.
+        Transaction Preparation: Users planning to transfer funds in different currencies can utilize this endpoint to understand the conversion implications on their funds before proceeding with a transaction.
 
 ## contributing
 ## license
