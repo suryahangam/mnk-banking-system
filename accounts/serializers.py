@@ -65,7 +65,6 @@ class AccountSerializer(serializers.ModelSerializer):
         read_only_fields = [
             'id',
             'balance',
-            'currency',
             'date_opened',
             'account_number',
             'transactions',
