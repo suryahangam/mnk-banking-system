@@ -1,0 +1,51 @@
+# Python related
+*.pyc
+*.pyo
+__pycache__/
+*.pyd
+
+# Django specific
+*.log
+*.sqlite3
+db.sqlite3
+media/
+staticfiles/
+*.pot
+*.pyc
+
+# Environment variables
+.env
+*.env
+
+# IDE settings
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Testing and coverage
+.coverage
+.coverage.*
+nosetests.xml
+test-results/
+
+# OS specific files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.bak
+*.orig
+
+# C extensions
+*.so
+
+# PyInstaller
+#  Usually these files are written by a python script from a .spec file
+build/
+dist/
+*.egg-info/
+
+# Sphinx documentation
+docs/_build/
