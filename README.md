@@ -762,7 +762,7 @@ ___
 
     **Use Cases**
 
-   Transaction Preparation: Users planning to transfer funds in different currencies can utilize this endpoint to understand the conversion implications on their funds before proceeding with a transaction.
+    Users planning to transfer funds in different currencies can utilize this endpoint to understand the conversion implications on their funds before proceeding with a transaction.
 
 ## contributing
 ## license
