@@ -117,12 +117,14 @@ class CurrencyConverterView(APIView):
 
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+        from_currency =  account.currency if account else serializer.validated_data['from_currency']
 
-        if serializer.validated_data['to_currency'] == account.currency:
+        if serializer.validated_data['to_currency'] == from_currency:
             return Response({
                 'status': 'error',
                 'message': 'You cannot convert to the same currency.',
-                'error': account.currency
+                'error': from_currency
             }, status=status.HTTP_400_BAD_REQUEST)
 
         # to_currency is the target currency for conversion
@@ -131,7 +133,7 @@ class CurrencyConverterView(APIView):
 
         # get the latest exchange rate and calculate the converted amount
         # add the spread to the total amount
-        exchange_rate = get_latest_exchange_rate(account.currency, to_currency)
+        exchange_rate = get_latest_exchange_rate(from_currency, to_currency)
         converted_amount = Decimal(amount) * Decimal(exchange_rate)
         total_amount = converted_amount + \
             (converted_amount * Decimal(settings.CURRENCY_CONVERSION_SPREAD))
@@ -140,13 +142,14 @@ class CurrencyConverterView(APIView):
             'status': 'success',
             'message': 'Please note that the displayed converted amounts are based on real-time exchange rates, which may fluctuate. The actual rate at the time of the transaction may differ.',
             'data': {
-                'from_currency': account.currency,  # Sender's currency
+                'from_currency': from_currency,  # Sender's currency
                 'to_currency': to_currency,  # Target currency
                 'amount': amount,  # Original amount (In sender's currency)
                 # Converted amount (In receiver's currency)
                 'converted_amount': converted_amount,
                 # Exchange rate from sender's currency to receiver's currency
                 'exchange_rate': exchange_rate,
+                'spread': settings.CURRENCY_CONVERSION_SPREAD,
             }
 
         }, status=status.HTTP_200_OK)

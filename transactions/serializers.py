@@ -230,6 +230,11 @@ class TransactionCreateSerializer(serializers.ModelSerializer):
 
 class CurrencyConverterSerializer(serializers.Serializer):
     amount = serializers.DecimalField(max_digits=15, decimal_places=2)
+    from_currency = serializers.ChoiceField(choices=[
+        ('USD', 'USD'),
+        ('EUR', 'EUR'),
+        ('GBP', 'GBP'),
+    ], required=False, allow_blank=True)
     to_currency = serializers.ChoiceField(choices=[
         ('USD', 'USD'),
         ('EUR', 'EUR'),

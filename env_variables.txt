@@ -1,0 +1,41 @@
+# Django Settings
+
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY='django-insecure-5d#l%k1wd$b8b@3sy$!sjjg^$chv!z$-iuyv&nlmrg&km&3j=j'
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG=True
+
+ALLOWED_HOSTS='localhost'
+
+# Email Configuration
+EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST='smtp.gmail.com'
+EMAIL_PORT=587
+EMAIL_USE_TLS=True
+EMAIL_HOST_USER='suryatest84@gmail.com'
+EMAIL_HOST_PASSWORD='gqeg cnsl pomy pfge'  # Remember to replace this with a secure method in production
+
+# JWT Configuration
+JWT_ACCESS_TOKEN_LIFETIME='60'  # Minutes
+JWT_REFRESH_TOKEN_LIFETIME='1440'  # Days (1 day)
+
+# ClickSend Configuration
+CLICKSEND_API_KEY='E1EFE0BD-9F53-E15D-B788-325DCD665EEE'
+CLICKSEND_USERNAME='suryahangam296@gmail.com'
+
+
+# Currency exchange API
+EXCHANGE_RATE_API_KEY='2f6939c9813b387125fc3967b7b54909'
+EXCHANGE_RATE_API_URL='https://api.exchangeratesapi.io/v1/latest'
+
+CURRENCY_CONVERSION_SPREAD=0.01
+
+# DATABASE CONFIGURATION
+DATABASE_ENGINE = 'django.db.backends.postgresql'
+DATABASE_NAME = 'banking_system1'
+DATABASE_USER = 'banking_user1'
+DATABASE_PASSWORD = 'mypassword'
+DATABASE_HOST = 'localhost'
+DATABASE_PORT = '5432'
+

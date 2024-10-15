@@ -1,5 +1,8 @@
-from django.contrib.auth import get_user_model
 from rest_framework import serializers
+from django.contrib.auth import get_user_model
+from django.contrib.auth.password_validation import validate_password
+
+from rest_framework.validators import UniqueValidator
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -18,7 +21,16 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         - The email must be a valid email address (email field validation).
 
     '''
-    password = serializers.CharField(write_only=True)
+    email = serializers.EmailField(
+        validators=[
+            UniqueValidator(
+                queryset=get_user_model().objects.all(),
+                message="Email already exists."
+            )
+        ]
+    )
+    password = serializers.CharField(
+        write_only=True, validators=[validate_password])
     confirm_password = serializers.CharField(write_only=True)
 
     class Meta:
@@ -37,10 +49,6 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Passwords do not match.")
         return attrs
 
-    def validate_email(self, value):
-        if get_user_model().objects.filter(email=value).exists():
-            raise serializers.ValidationError("Email already exists.")
-        return value
 
 
 class UserListSerializer(serializers.ModelSerializer):

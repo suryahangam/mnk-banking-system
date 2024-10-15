@@ -132,8 +132,6 @@ class CustomTokenObtainPairView(TokenObtainPairView):
                 # but no need to block the user from logging in as user can
                 # chhose another OTP method
 
-                # TODO: Resend OTP feature implementation
-
             # Remove tokens since 2FA is pending
             response.data.pop('refresh', None)
             response.data.pop('access', None)
@@ -203,3 +201,6 @@ class TwoFactorVerifyView(APIView):
                 'message': 'Invalid OTP code.',
                 'error': 'Invalid OTP code.'
             }, status=status.HTTP_400_BAD_REQUEST)
+
+
+# admin@334#

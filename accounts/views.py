@@ -1,6 +1,7 @@
 from rest_framework import generics, status, filters
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
+from django.db.models import Prefetch
 
 from .models import Account
 from .serializers import AccountSerializer
@@ -19,7 +20,7 @@ class AccountCreateView(generics.CreateAPIView):
     or multiple accounts. On successful creation, it returns the IDs of the 
     newly created accounts.
     '''
-    
+
     permission_classes = [IsAuthenticated, IsAdmin]
     serializer_class = AccountSerializer
 
@@ -36,7 +37,6 @@ class AccountCreateView(generics.CreateAPIView):
 
 class AccountUpdateView(generics.UpdateAPIView):
     permission_classes = [IsAuthenticated, IsAccountOwnerOrAdmin]
-    queryset = Account.objects.all()
     serializer_class = AccountSerializer
 
     def get_object(self):
@@ -79,7 +79,10 @@ class AccountListView(generics.ListAPIView):
     A view to list all accounts.
     """
     permission_classes = [IsAuthenticated, IsAccountOwnerOrAdmin]
-    queryset = Account.objects.all()
+    queryset = Account.objects.all().prefetch_related(
+        Prefetch('sent_transactions'),
+        Prefetch('received_transactions')
+    )
     serializer_class = AccountSerializer
     pagination_class = ListPagination
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
@@ -91,7 +94,10 @@ class AccountDetailView(generics.RetrieveAPIView):
     A view to retrieve details of a specific account.
     """
     permission_classes = [IsAuthenticated, IsAccountOwnerOrAdmin]
-    queryset = Account.objects.all()
+    queryset = Account.objects.all().prefetch_related(
+        Prefetch('sent_transactions'),
+        Prefetch('received_transactions')
+    ) 
     serializer_class = AccountSerializer
 
     def get_serializer_context(self):
