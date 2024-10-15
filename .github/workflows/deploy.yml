@@ -1,0 +1,79 @@
+name: Deploy to DigitalOcean
+
+on:
+  push:
+    branches: [develop]
+  # pull_request:
+  #   types: [closed]
+  #   branches: [develop]
+
+jobs:
+  # testing:
+  #   runs-on: ubuntu-latest
+  #   services:
+
+  #     postgres:
+  #       image: postgres:latest
+  #       env:
+  #         POSTGRES_DB: ${{ secrets.DATABASE }}
+  #         POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+  #         POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+  #         POSTGRES_HOST_AUTH_METHOD: trust
+  #       ports:
+  #         - 5432:5432
+  #       options: >-
+  #         --health-cmd="pg_isready"
+  #         --health-interval=10s
+  #         --health-timeout=5s
+  #         --health-retries=5
+          
+  #   steps:
+  #     - name: Check out code
+  #       uses: actions/checkout@v2
+
+  #     - name: Set up environment file
+  #       run: |
+  #         echo "FLASK_APP=${{ secrets.FLASK_APP }}" >> .env.prod
+  #         echo "FLASK_DEBUG=${{ secrets.FLASK_DEBUG }}" >> .env.prod
+  #         echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env.prod
+  #         echo "SQL_HOST=${{ secrets.SQL_HOST }}" >> .env.prod
+  #         echo "SQL_PORT=${{ secrets.SQL_PORT }}" >> .env.prod
+  #         echo "DATABASE=${{ secrets.DATABASE }}" >> .env.prod
+  #         echo "APP_FOLDER=${{ secrets.APP_FOLDER }}" >> .env.prod
+  #         echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> .env.prod
+
+  #         echo "MYSQL_USER=${{ secrets.MYSQL_USER }}" >> .env.prod.db
+  #         echo "MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}" >> .env.prod.db
+  #         echo "MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" >> .env.prod.db
+  #         echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> .env.prod.db
+  #         echo "MYSQL_PORT=${{ secrets.MYSQL_PORT }}" >> .env.prod.db
+
+  #     - name: Build the Docker Compose stack
+  #       run: docker-compose -f docker-compose.prod.yml up --build -d
+
+  #     - name: Wait for the services to start
+  #       run: sleep 50
+        
+  #     - name: Run tests
+  #       run: docker-compose -f docker-compose.prod.yml run web pytest
+
+  #     - name: Shutdown Docker Compose stack
+  #       run: docker-compose -f docker-compose.prod.yml down
+
+  deploy:
+    # needs: testing
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v2
+    
+    - name: Set up SSH
+      run: |
+        mkdir -p ~/.ssh/
+        echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan ${{ secrets.HOST }} >> ~/.ssh/known_hosts
+
+    - name: Deploy to DigitalOcean
+      run: |
+        ssh -i ~/.ssh/id_rsa ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'bash -s' < scripts/deploy.sh
