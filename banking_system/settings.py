@@ -54,6 +54,8 @@ INSTALLED_APPS = [
     'authentication',
     'accounts',
     'transactions',
+    'rest_framework_swagger',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
