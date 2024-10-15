@@ -10,21 +10,23 @@ class Transaction(models.Model):
     sender = models.ForeignKey(
         Account,
         related_name='sent_transactions',
-        on_delete=models.PROTECT
+        on_delete=models.PROTECT,
+        db_index=True
     )
     receiver = models.ForeignKey(
         Account,
         related_name='received_transactions',
-        on_delete=models.PROTECT
+        on_delete=models.PROTECT,
+        db_index=True
     )
-    amount = models.DecimalField(max_digits=10, decimal_places=2) # amount will be in sender's currency
-    timestamp = models.DateTimeField(auto_now_add=True)
+    amount = models.DecimalField(max_digits=10, decimal_places=2, db_index=True) # amount will be in sender's currency
+    timestamp = models.DateTimeField(auto_now_add=True, db_index=True)
     # e.g., PENDING, COMPLETED, FAILED
     status = models.CharField(
-        max_length=20, choices=STATUS_CHOICES, default="PENDING")
+        max_length=20, choices=STATUS_CHOICES, default="PENDING", db_index=True)
     description = models.TextField(null=True, blank=True)
     exchange_rate = models.FloatField(null=True, blank=True)
-    currency = models.CharField(max_length=3, null=True) # Sender's currency
+    currency = models.CharField(max_length=3, null=True, ) # Sender's currency
     to_currency = models.CharField(max_length=3, null=True) # Receiver's currency
 
     def __str__(self):

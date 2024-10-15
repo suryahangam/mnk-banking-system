@@ -39,12 +39,12 @@ class Account(models.Model):
     account_number = models.CharField(
         max_length=12, unique=True, db_index=True)
     account_type = models.CharField(
-        max_length=10, choices=ACCOUNT_TYPES, default='savings')
-    
+        max_length=10, choices=ACCOUNT_TYPES, default='savings', db_index=True)
+
     # TODO: instead of using default 10000, use currency specific defaults dynamically
     # e.g. 10000 USD, 7500 GBP, 8500 EUR
     balance = models.DecimalField(
-        max_digits=15, decimal_places=2, default=10000.00)
+        max_digits=15, decimal_places=2, default=10000.00, db_index=True)
     currency = models.CharField(
         max_length=3, choices=CURRENCY_CHOICES, default='USD')
     date_opened = models.DateField(auto_now_add=True, db_index=True)
@@ -54,11 +54,12 @@ class Account(models.Model):
         max_digits=5, decimal_places=2, default=0.00)
     last_transaction_date = models.DateTimeField(
         null=True, blank=True, db_index=True)
-    
+
     class Meta:
         unique_together = [
-            ('user', 'account_number'), 
+            ('user', 'account_number'),
             ('user', 'account_type')]
+        ordering = ['-date_opened']
 
     def __str__(self):
         return f"{self.account_number} ({self.user.email})"
