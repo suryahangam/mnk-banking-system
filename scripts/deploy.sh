@@ -10,7 +10,7 @@ echo "Starting deployment script."
 
 # Pull the latest changes from the repository
 echo "Pulling latest changes from Git repository..."
-git pull origin develop || { echo "Git pull failed."; exit 1; }
+git checkout develop || git pull origin develop || { echo "Git pull failed."; exit 1; }
 
 # Stop the existing docker containers
 echo "Stopping existing Docker containers..."
