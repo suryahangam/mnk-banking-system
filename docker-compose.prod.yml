@@ -9,7 +9,7 @@ services:
     volumes:
       - static_volume:/app/static 
       - media_volume:/app/media     
-    expose:
+    ports:
       - 8000:8000  # Exposing the port for the web service
     env_file:
       - ./.env  # Environment variables for Django

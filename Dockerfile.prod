@@ -31,7 +31,7 @@ COPY . /usr/src/app/
 
 # install python dependencies
 
-COPY ./requirements.txt ./prod_requirements.txt .
+COPY ./requirements.txt ./prod_requirements.txt /usr/src/app/
 
 RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r requirements.txt && \
     pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r prod_requirements.txt
